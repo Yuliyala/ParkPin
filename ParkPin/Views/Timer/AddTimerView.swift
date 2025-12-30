@@ -169,8 +169,8 @@ struct AddTimerView: View {
                     .ignoresSafeArea()
                     .contentShape(Rectangle())
                     .onTapGesture {
-                        showingDatePicker = false
                         hasSelectedDate = true
+                        showingDatePicker = false
                     }
                 
                 VStack {
@@ -181,10 +181,6 @@ struct AddTimerView: View {
                         displayedComponents: [.date]
                     )
                     .padding(.horizontal, 24)
-                    .onChange(of: selectedDate) { _ in
-                        showingDatePicker = false
-                        hasSelectedDate = true
-                    }
                     
                     Spacer()
                 }
@@ -213,10 +209,6 @@ struct AddTimerView: View {
                         displayedComponents: [.hourAndMinute]
                     )
                     .padding(.horizontal, 24)
-                    .onChange(of: selectedTime) { _ in
-                        showingTimePicker = false
-                        hasSelectedTime = true
-                    }
                     
                     Spacer()
                 }
@@ -302,16 +294,34 @@ struct DatePickerView: View {
     @Binding var selectedDate: Date
     let displayedComponents: DatePickerComponents
     
+    private var dateRange: ClosedRange<Date> {
+        let calendar = Calendar.current
+        var startComponents = DateComponents()
+        startComponents.year = 1900
+        startComponents.month = 1
+        startComponents.day = 1
+        let startDate = calendar.date(from: startComponents) ?? Date()
+        
+        var endComponents = DateComponents()
+        endComponents.year = 2100
+        endComponents.month = 12
+        endComponents.day = 31
+        let endDate = calendar.date(from: endComponents) ?? Date()
+        
+        return startDate...endDate
+    }
+    
     var body: some View {
         if displayedComponents.contains(.date) && !displayedComponents.contains(.hourAndMinute) {
-            DatePicker("", selection: $selectedDate, displayedComponents: displayedComponents)
+            DatePicker("", selection: $selectedDate, in: dateRange, displayedComponents: displayedComponents)
                 .datePickerStyle(.graphical)
                 .labelsHidden()
                 .padding()
                 .background(Color.white)
                 .cornerRadius(12)
+                .onTapGesture(count: 99) {}
         } else {
-            DatePicker("", selection: $selectedDate, displayedComponents: displayedComponents)
+            DatePicker("", selection: $selectedDate, in: dateRange, displayedComponents: displayedComponents)
                 .datePickerStyle(.wheel)
                 .labelsHidden()
                 .padding()
