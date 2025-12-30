@@ -59,6 +59,7 @@ struct ParkingDetailView: View {
                                             .scaledToFit()
                                             .frame(width: 66, height: 63)
                                     }
+                                    .buttonStyle(.plain)
                                 }
                                 
                                 if let onDelete = onDelete {
@@ -68,6 +69,7 @@ struct ParkingDetailView: View {
                                             .scaledToFit()
                                             .frame(width: 66, height: 63)
                                     }
+                                    .buttonStyle(.plain)
                                 }
                             }
                         }
@@ -112,6 +114,7 @@ struct ParkingDetailView: View {
                                                     .scaledToFit()
                                                     .frame(width: 66, height: 63)
                                             }
+                                            .buttonStyle(.plain)
                                         }
                                         
                                         if let onDelete = onDelete {
@@ -121,6 +124,7 @@ struct ParkingDetailView: View {
                                                     .scaledToFit()
                                                     .frame(width: 66, height: 63)
                                             }
+                                            .buttonStyle(.plain)
                                         }
                                     }
                                     .padding(.top, 4)
@@ -204,11 +208,6 @@ struct ParkingDetailView: View {
         }
         .onDisappear {
             showTabBar = true
-            if let selectedTabBinding = selectedTabBinding {
-                DispatchQueue.main.async {
-                    selectedTabBinding.wrappedValue = 0
-                }
-            }
         }
     }
     

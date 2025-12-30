@@ -8,6 +8,8 @@ struct HistoryView: View {
     @State private var parkingToDelete: ParkingSpot?
     @State private var showDeleteAlert = false
     @State private var navigateToEdit = false
+    @State private var selectedParking: ParkingSpot?
+    @State private var navigateToDetail = false
     @Binding var showTabBar: Bool
     @Binding var selectedTab: Int
     
@@ -49,20 +51,10 @@ struct HistoryView: View {
                     ScrollView(showsIndicators: false) {
                         LazyVStack(spacing: 16) {
                             ForEach(history) { parking in
-                                NavigationLink(destination: ParkingDetailView(
-                                    parking: parking,
-                                    onEdit: {
-                                        parkingToEdit = parking
-                                        navigateToEdit = true
-                                    },
-                                    onDelete: {
-                                        parkingToDelete = parking
-                                        showDeleteAlert = true
-                                    },
-                                    showTabBar: $showTabBar,
-                                    selectedTab: $selectedTab
-                                )
-                                .navigationBarHidden(true)) {
+                                Button(action: {
+                                    selectedParking = parking
+                                    navigateToDetail = true
+                                }) {
                                     HistoryCard(parking: parking)
                                 }
                                 .buttonStyle(.plain)
@@ -70,11 +62,44 @@ struct HistoryView: View {
                         }
                         .padding(.horizontal, 24)
                         .padding(.top, 20)
+                        .padding(.bottom, 20)
                     }
                 }
             }
         }
         .navigationBarHidden(true)
+        .navigationDestination(isPresented: $navigateToDetail) {
+            if let parking = selectedParking {
+                ParkingDetailView(
+                    parking: parking,
+                    onEdit: {
+                        parkingToEdit = parking
+                        selectedParking = nil
+                        navigateToDetail = false
+                        navigateToEdit = true
+                    },
+                    onDelete: {
+                        parkingToDelete = parking
+                        selectedParking = nil
+                        navigateToDetail = false
+                        showDeleteAlert = true
+                    },
+                    showTabBar: $showTabBar,
+                    selectedTab: $selectedTab
+                )
+                .navigationBarHidden(true)
+            }
+        }
+        .navigationDestination(isPresented: $navigateToEdit) {
+            if let parking = parkingToEdit {
+                AddParkingView(existingParking: parking, showTabBar: $showTabBar) {_ in 
+                    loadHistory()
+                    navigateToEdit = false
+                    parkingToEdit = nil
+                }
+                .navigationBarHidden(true)
+            }
+        }
         .onAppear {
             loadHistory()
             showTabBar = false
