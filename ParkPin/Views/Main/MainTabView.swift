@@ -11,7 +11,7 @@ struct MainTabView: View {
                 case 0:
                     ParkingView(showTabBar: $showTabBar)
                 case 1:
-                    TimerView()
+                    TimerView(showTabBar: $showTabBar)
                         .onAppear {
                             showTabBar = true
                         }

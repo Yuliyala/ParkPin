@@ -12,9 +12,11 @@ struct AddTimerView: View {
     
     let existingTimer: ParkingTimer?
     let onSave: (ParkingTimer) -> Void
+    @Binding var showTabBar: Bool
     
-    init(existingTimer: ParkingTimer? = nil, onSave: @escaping (ParkingTimer) -> Void) {
+    init(existingTimer: ParkingTimer? = nil, showTabBar: Binding<Bool>, onSave: @escaping (ParkingTimer) -> Void) {
         self.existingTimer = existingTimer
+        self._showTabBar = showTabBar
         self.onSave = onSave
         
         if let timer = existingTimer {
@@ -107,6 +109,12 @@ struct AddTimerView: View {
             }
         }
         .navigationBarHidden(true)
+        .onAppear {
+            showTabBar = false
+        }
+        .onDisappear {
+            showTabBar = true
+        }
         .overlay {
             datePickerOverlay
             timePickerOverlay

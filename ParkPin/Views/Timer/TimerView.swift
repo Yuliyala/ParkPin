@@ -4,6 +4,7 @@ struct TimerView: View {
     @StateObject private var timerManager = TimerManager.shared
     @State private var navigateToEdit = false
     @State private var showDeleteAlert = false
+    @Binding var showTabBar: Bool
     
     var body: some View {
         NavigationStack {
@@ -45,7 +46,7 @@ struct TimerView: View {
                         VStack {
                             Spacer()
                             
-                            NavigationLink(destination: AddTimerView { timer in
+                            NavigationLink(destination: AddTimerView(showTabBar: $showTabBar) { timer in
                                 timerManager.startTimer(with: timer)
                             }) {
                                 emptyStateView
@@ -64,7 +65,7 @@ struct TimerView: View {
             }
             .navigationDestination(isPresented: $navigateToEdit) {
                 if let timer = timerManager.currentTimer {
-                    AddTimerView(existingTimer: timer) { updatedTimer in
+                    AddTimerView(existingTimer: timer, showTabBar: $showTabBar) { updatedTimer in
                         timerManager.startTimer(with: updatedTimer)
                         navigateToEdit = false
                     }
