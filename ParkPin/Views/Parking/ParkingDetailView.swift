@@ -194,6 +194,7 @@ struct ParkingDetailView: View {
                     }
                     .padding(.horizontal, 32)
                     .padding(.top, 20)
+                    .padding(.bottom, 100)
                 }
             }
         }
