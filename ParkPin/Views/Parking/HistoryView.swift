@@ -104,9 +104,6 @@ struct HistoryView: View {
             loadHistory()
             showTabBar = false
         }
-        .onDisappear {
-            showTabBar = true
-        }
         .overlay(deleteAlertOverlay)
     }
     
